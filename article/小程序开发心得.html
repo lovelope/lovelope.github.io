@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>小程序开发心得 | lovelope博客</title>
+    <meta name="description" content="种下一棵树的最佳时间不是十年前，而是现在。">
+    
+    
+    <link rel="preload" href="/assets/css/0.styles.83d3ab16.css" as="style"><link rel="preload" href="/assets/js/app.5770203f.js" as="script"><link rel="preload" href="/assets/js/16.bcf7569f.js" as="script"><link rel="prefetch" href="/assets/js/3.aff9079f.js"><link rel="prefetch" href="/assets/js/2.673272d7.js"><link rel="prefetch" href="/assets/js/4.a1bc754e.js"><link rel="prefetch" href="/assets/js/5.26cd1ccd.js"><link rel="prefetch" href="/assets/js/6.0af27563.js"><link rel="prefetch" href="/assets/js/7.a5fea5a1.js"><link rel="prefetch" href="/assets/js/8.cd6f4ee1.js"><link rel="prefetch" href="/assets/js/9.0bd568a0.js"><link rel="prefetch" href="/assets/js/10.368d8957.js"><link rel="prefetch" href="/assets/js/11.9f1e6fae.js"><link rel="prefetch" href="/assets/js/12.b8efd0be.js"><link rel="prefetch" href="/assets/js/13.624745ce.js"><link rel="prefetch" href="/assets/js/14.e1387c03.js"><link rel="prefetch" href="/assets/js/15.76fa5cc0.js"><link rel="prefetch" href="/assets/js/17.51e61b79.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.83d3ab16.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">lovelope博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><!---->  <!----> </div> <div class="page"> <div class="content"><ol><li>不能在同一元素上绑定相同的属性，而这个在vue是可以的<br>
+例如：</li></ol> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>view</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>default<span class="token punctuation">&quot;</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>{{loaded ? <span class="token punctuation">'</span>load-class<span class="token punctuation">'</span> : <span class="token punctuation">'</span>unload-class<span class="token punctuation">'</span>}}<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>view</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>在最终的渲染结果里，只会有<code>load-class</code>或者<code>unload-class</code>，前面的<code>default</code>会被覆盖掉<br>
+正确写法如下</p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>view</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>default {{loaded ? <span class="token punctuation">'</span>load-class<span class="token punctuation">'</span> : <span class="token punctuation">'</span>unload-class<span class="token punctuation">'</span>}}<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>view</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><ol start="2"><li>没有过滤器的问题
+这使得我们需要对数据进行预处理<br>
+例如：
+价格<code>salePrice</code>展示时要求：小数点前的数字显示大一点，小数点后的数字显示小一点，如果小数点后为0则不显示小数点后面的部分<br>
+这在vue里一个过滤器就可以<br>
+而在小程序里，由于没有过滤器，如果把字段处理写到行内，会导致代码难以阅读且代码复用性低。因此，我们需要先对数据进行预处理，把数据处理好，再进行展示</li></ol> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> formatPrice <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'utils'</span>
+<span class="token keyword">let</span> goodsList <span class="token operator">=</span> <span class="token function">formatPrice</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>data<span class="token punctuation">.</span>goodsList<span class="token punctuation">,</span> <span class="token string">'salePrice'</span><span class="token punctuation">)</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setData</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token string">'goodsList'</span><span class="token punctuation">:</span> goodsList
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><ol start="3"><li><code>rpx</code>并非全能(大多数情况可用)
+整个屏幕的宽度是750rpx<br>
+在h5页面转小程序过程中，有一个场景是单行可滑动的商品列表，一行展示2.5或3.5个商品，这里的元素宽度是通过</li></ol> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setData</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token comment">// windowWidth是可使用窗口宽度，column是每行展示的商品数</span>
+  <span class="token string">'goodsItemWidth'</span><span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>data<span class="token punctuation">.</span>windowWidth <span class="token operator">/</span> <span class="token keyword">this</span><span class="token punctuation">.</span>data<span class="token punctuation">.</span>column
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>计算得到的<br>
+起初我们把<code>${goodsItemWidth}px</code>全部转化为<code>${goodsItemWidth*2}rpx</code>，发现在高分辨率手机（例如iphone7p）上宽度不正确，我多次调整这个数值也不能适配所有机型，直接使用<code>${goodsItemWidth}px</code>立即正常了</p> <ol start="4"><li>所有影响页面展示的数据初始化或赋值都必须使用setData()</li></ol></div> <div class="page-edit"><!----> <!----></div> <!----> </div> <!----></div></div>
+    <script src="/assets/js/16.bcf7569f.js" defer></script><script src="/assets/js/app.5770203f.js" defer></script>
+  </body>
+</html>

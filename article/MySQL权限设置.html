@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>MySQL权限设置 | lovelope博客</title>
+    <meta name="description" content="种下一棵树的最佳时间不是十年前，而是现在。">
+    
+    
+    <link rel="preload" href="/assets/css/0.styles.83d3ab16.css" as="style"><link rel="preload" href="/assets/js/app.5770203f.js" as="script"><link rel="preload" href="/assets/js/10.368d8957.js" as="script"><link rel="prefetch" href="/assets/js/3.aff9079f.js"><link rel="prefetch" href="/assets/js/2.673272d7.js"><link rel="prefetch" href="/assets/js/4.a1bc754e.js"><link rel="prefetch" href="/assets/js/5.26cd1ccd.js"><link rel="prefetch" href="/assets/js/6.0af27563.js"><link rel="prefetch" href="/assets/js/7.a5fea5a1.js"><link rel="prefetch" href="/assets/js/8.cd6f4ee1.js"><link rel="prefetch" href="/assets/js/9.0bd568a0.js"><link rel="prefetch" href="/assets/js/11.9f1e6fae.js"><link rel="prefetch" href="/assets/js/12.b8efd0be.js"><link rel="prefetch" href="/assets/js/13.624745ce.js"><link rel="prefetch" href="/assets/js/14.e1387c03.js"><link rel="prefetch" href="/assets/js/15.76fa5cc0.js"><link rel="prefetch" href="/assets/js/16.bcf7569f.js"><link rel="prefetch" href="/assets/js/17.51e61b79.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.83d3ab16.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">lovelope博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><!---->  <!----> </div> <div class="page"> <div class="content"><h1 id="向mysql添加新用户并分配权限"><a href="#向mysql添加新用户并分配权限" aria-hidden="true" class="header-anchor">#</a> 向mysql添加新用户并分配权限</h1> <div class="language- extra-class"><pre class="language-text"><code>bin&gt;mysql -u root
+mysql&gt; grant 权限1,权限2,…权限n on 数据库名称.表名称 to 用户名@用户地址 identified by '连接口令';
+</code></pre></div><ul><li>权限1,权限2,…权限n代表select,insert,update,delete,create,drop,index,alter,grant,references,reload,shutdown,process,file等14个权限。</li> <li>当 权限1,权限2,…权限n 被 all privileges 或者 all 代替，表示赋予用户全部权限。</li> <li>当数据库名称.表名称被*.*代替，表示赋予用户操作服务器上所有数据库所有表的权限。</li> <li>用户地址可以是 localhost ，也可以是ip地址、机器名字、域名。也可以用'%'表示从任何地址连接。</li> <li>'连接口令'不能为空，否则创建失败。</li></ul> <p>例如：</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;grant select,insert,update,delete,create,drop on vtdc.employee to joe@10.163.225.87 identified by '123';
+</code></pre></div><p>给来自10.163.225.87的用户joe分配可对数据库vtdc的employee表进行select,insert,update,delete,create,drop等操作的权限，并设定口令为123。</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;grant all privileges on vtdc.* to joe@10.163.225.87 identified by '123';
+</code></pre></div><p>给来自10.163.225.87的用户joe分配可对数据库vtdc所有表进行所有操作的权限，并设定口令为123。</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;grant all privileges on *.* to joe@10.163.225.87 identified by '123';
+</code></pre></div><p>给来自10.163.225.87的用户joe分配可对所有数据库的所有表进行所有操作的权限，并设定口令为123。</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;grant all privileges on *.* to joe@localhost identified by '123';
+</code></pre></div><p>给本机用户joe分配可对所有数据库的所有表进行所有操作的权限，并设定口令为123。</p> <h2 id="修改mysql密码和密码破解的常用方法"><a href="#修改mysql密码和密码破解的常用方法" aria-hidden="true" class="header-anchor">#</a> 修改MYSQL密码和密码破解的常用方法</h2> <p>首先要声明一点，大部分情况下，修改MySQL是需要有mysql里的root权限的，所以一般用户无法更改密码，除非请求管理员。</p> <ol><li>方法一
+使用phpmyadmin，这是最简单的了，修改mysql库的user表，不过别忘了使用PASSWORD函数。</li> <li>方法二
+使用mysqladmin，这是前面声明的一个特例。</li></ol> <div class="language- extra-class"><pre class="language-text"><code>mysqladmin -u root -p password mypasswd
+</code></pre></div><p>输入这个命令后，需要输入root的原密码，然后root的密码将改为mypasswd。
+把命令里的root改为你的用户名，你就可以改你自己的密码了。
+当然如果你的mysqladmin连接不上mysql server，或者你没有办法执行mysqladmin，那么这种方法就是无效的，而且mysqladmin无法把密码清空。</p> <p>下面的方法都在mysql提示符下使用，且必须有mysql的root权限：
+3. 方法三</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt; Insert INTO mysql.user (Host,User,Password)
+VALUES('%','jeffrey',PASSWORD('biscuit'));
+mysql&gt; FLUSH PRIVILEGES
+</code></pre></div><p>确切地说这是在增加一个用户，用户名为jeffrey，密码为biscuit。
+在《mysql中文参考手册》里有这个例子，所以我也就写出来了。
+注意要使用PASSWORD函数，然后还要使用FLUSH PRIVILEGES。</p> <ol start="4"><li>方法四
+和方法三一样，只是使用了REPLACE语句</li></ol> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt; REPLACE INTO mysql.user (Host,User,Password)
+VALUES('%','jeffrey',PASSWORD('biscuit'));
+mysql&gt; FLUSH PRIVILEGES
+</code></pre></div><ol start="5"><li>方法五
+使用SET PASSWORD语句，</li></ol> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt; SET PASSWORD FOR jeffrey@&quot;%&quot; = PASSWORD('biscuit');
+</code></pre></div><p>拟也必须使用PASSWORD()函数，但是不需要使用FLUSH PRIVILEGES。</p> <ol start="6"><li>方法六
+使用GRANT ... IDENTIFIED BY语句</li></ol> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt; GRANT USAGE ON *.* TO jeffrey@&quot;%&quot; IDENTIFIED BY 'biscuit';
+</code></pre></div><p>这里PASSWORD()函数是不必要的，也不需要使用FLUSH PRIVILEGES。</p> <p>注意： PASSWORD() [不是]以在Unix口令加密的同样方法施行口令加密。
+MySQL 忘记口令的解决办法
+如果 MySQL 正在运行，首先杀之： <code>killall -TERM mysqld</code>。
+启动 MySQL ：<code>bin/safe_mysqld --skip-grant-tables &amp;</code>
+就可以不需要密码就进入 MySQL 了。
+然后就是</p> <div class="language- extra-class"><pre class="language-text"><code>&gt;use mysql
+&gt;update user set password=password(&quot;new_pass&quot;) where user=&quot;root&quot;;
+&gt;flush privileges;
+</code></pre></div><p>重新杀 MySQL ，用正常方法启动 MySQL 。</p> <h2 id="mysql密码清空"><a href="#mysql密码清空" aria-hidden="true" class="header-anchor">#</a> mysql密码清空</h2> <blockquote><ul><li>Windows:
+1.用系统管理员登陆系统。
+2.停止MySQL的服务。
+3.进入命令窗口，然后进入MySQL的安装目录，比如我的安装目录是c:\mysql,进入C:\mysql\bin
+4.跳过权限检查启动MySQL，</li></ul></blockquote> <div class="language- extra-class"><pre class="language-text"><code>c:\mysql\bin&gt;mysqld-nt --skip-grant-tables
+</code></pre></div><p>5.重新打开一个窗口，进入c:\mysql\bin目录，设置root的新密码</p> <div class="language- extra-class"><pre class="language-text"><code>c:\mysql\bin&gt;mysqladmin -u root flush-privileges password &quot;newpassword&quot;
+c:\mysql\bin&gt;mysqladmin -u root -p shutdown
+</code></pre></div><p>将newpassword替换为你要用的root的密码，第二个命令会提示你输入新密码，重复第一个命令输入的密码。
+6.停止MySQL Server，用正常模式启动Mysql
+7．你可以用新的密码链接到Mysql了。</p> <blockquote><ul><li>Unix&amp;Linux：
+1.用root或者运行mysqld的用户登录系统；
+2．利用kill命令结束掉mysqld的进程；
+3．使用--skip-grant-tables参数启动MySQL Server</li></ul></blockquote> <div class="language- extra-class"><pre class="language-text"><code>shell&gt;mysqld_safe --skip-grant-tables &amp;
+</code></pre></div><p>4.为root@localhost设置新密码</p> <div class="language- extra-class"><pre class="language-text"><code>shell&gt;mysqladmin -u root flush-privileges password &quot;newpassword&quot;
+</code></pre></div><p>5．重启MySQL Server</p> <p>mysql修改密码
+　　mysql修改，可在mysql命令行执行如下：</p> <div class="language- extra-class"><pre class="language-text"><code>　　mysql -u root mysql
+　　mysql&gt; Update user SET password=PASSWORD(&quot;new password&quot;) Where user='name';
+　　mysql&gt; FLUSH PRIVILEGES;
+　　mysql&gt; QUIT
+</code></pre></div><p>教你如何将MySQL数据库的密码恢复
+因为MySQL密码存储于数据库mysql中的user表中，所以只需要将我windows 2003下的MySQL中的user表拷贝过来覆盖掉就行了。
+在c:\mysql\data\mysql(linux 则一般在/var/lib/mysql/mysql/)目录下有三个user表相关文件user.frm、user.MYD、user.MYI
+user.frm //user表样式文件
+user.MYD //user表数据文件
+user.MYI //user表索引文件
+为保险起见，三个都拷贝过来，不过其实如果之前在要恢复的那个MySQL上没有更改过表结构的话，只要拷贝user.MYD就行了
+然后</p> <div class="language- extra-class"><pre class="language-text"><code>#. /etc/rc.d/init.d/mysql stop
+#. /etc/rc.d/init.d/mysql start
+#mysql -u root -p XXXXXX
+</code></pre></div><p>好了，可以用windows 2003下mysql密码登陆了</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;use mysql
+mysql&gt;update user set Password=PASSWORD('xxxxxx') where User='root';
+</code></pre></div><p>这时候会出错，提示user表只有读权限
+我分析了一下原因，只这样的，因为user.*文件的权限分配是windows 2003下的，在windows 2003下我ls -l一看权限是666
+在linux下我一看，拷过来后权限变成了600(其实正常情况下600就行了，只不过这里的文件属主不是mysql，拷过来后的属主变为了root,所以会出现权限不够，这时候如果你改成权限666则可以了，当然这样不好，没有解决问题的实质)，在/var/lib/mysql/mysql/下ls -l看了一下
+再</p> <div class="language- extra-class"><pre class="language-text"><code>#chown -R mysql:mysql user.*
+#chmod 600 user.*
+</code></pre></div><p>//OK,DONE
+重起一下MYSQL
+重新连接</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;use mysql
+mysql&gt;update user set Password=PASSWORD('xxxxxx') where User='root';
+mysql&gt;FLUSH PRIVILEGES;
+</code></pre></div><p>有一点值得注意:如果你windows 下mysql如果是默认配置的话，注意要还要执行</p> <div class="language- extra-class"><pre class="language-text"><code>mysql&gt;delete from user where User='';
+mysql&gt;delete from user where Host='%';
+mysql&gt;FLUSH PRIVILEGES;
+</code></pre></div><p>好了，到这里恢复密码过程就完成了
+这个方法么就是有点局限性，你必须也具备另外的user表文件
+其他还有几种方法
+其它方法一(这个是网上流传较广的方法,mysql中文参考手册上的)</p> <ol><li>向mysqld server 发送kill命令关掉mysqld server(不是 kill -9),存放进程ID的文件通常在MYSQL的数据库所在的目录中。</li></ol> <div class="language- extra-class"><pre class="language-text"><code>killall -TERM mysqld
+</code></pre></div><p>你必须是UNIX的root用户或者是你所运行的SERVER上的同等用户，才能执行这个操作。
+2. 使用`--skip-grant-tables' 参数来启动 mysqld。 LINUX下：</p> <div class="language- extra-class"><pre class="language-text"><code>/usr/bin/safe_mysqld --skip-grant-tables , windows下c:\mysql\bin\mysqld --skip-grant-tables
+</code></pre></div><ol start="3"><li>然后无密码登录到mysqld server ，</li></ol> <div class="language- extra-class"><pre class="language-text"><code>&gt;use mysql
+&gt;update user set password=password(&quot;new_pass&quot;) where user=&quot;root&quot;;
+&gt;flush privileges;
+</code></pre></div><p>。你也可以这样做：</p> <div class="language- extra-class"><pre class="language-text"><code>mysqladmin -h hostname -u user password 'new password''
+</code></pre></div><ol start="4"><li>载入权限表：</li></ol> <div class="language- extra-class"><pre class="language-text"><code>mysqladmin -h hostname flush-privileges'
+</code></pre></div><p>或者使用 SQL 命令</p> <div class="language- extra-class"><pre class="language-text"><code>FLUSH PRIVILEGES'
+</code></pre></div><ol start="5"><li></li></ol> <p><code>killall -TERM mysqld</code></p> <p>6.用新密码登陆
+其它方法二
+直接用十六进制编辑器编辑user.MYD文件
+不过这个里面我要说明一点，我这里编辑的时候发现个问题，加密的密码串有些是连续存储的，有些的最后两位被切开了，后两位存储在后面其他地方.这一点我还没想明白.还有注意一点就是编辑的是加密过的密码串，也就是说你还是需要另外有user表文件。这种方法和我最上面介绍的方法的区别在于，这种方法直接编辑linux下的user表文件，就不需要重新改文件属主和权限了
+修正一下：我在Windows下的实际操作如下
+1.关闭正在运行的MySQL。
+2.打开DOS窗口，转到mysql\bin目录。
+3.输入</p> <div class="language- extra-class"><pre class="language-text"><code>mysqld-nt --skip-grant-tables
+</code></pre></div><p>回车。如果没有出现提示信息，那就对了。
+4.再开一个DOS窗口（因为刚才那个DOS窗口已经不能动了），转到mysql\bin目录。
+5.输入mysql回车，如果成功，将出现MySQL提示符 &gt;
+6. 连接权限数据库</p> <div class="language- extra-class"><pre class="language-text"><code>&gt;use mysql;
+</code></pre></div><p>(&gt;是本来就有的提示符,别忘了最后的分号)</p> <p>6.改密码：</p> <div class="language- extra-class"><pre class="language-text"><code>&gt; update user set password=password(&quot;123456&quot;) where user=&quot;root&quot;; (别忘了最后的分号)
+</code></pre></div><p>7.刷新权限（必须的步骤）</p> <div class="language- extra-class"><pre class="language-text"><code>&gt;flush privileges;
+</code></pre></div><p>8.退出</p> <div class="language- extra-class"><pre class="language-text"><code>&gt; \q
+</code></pre></div><p>9.注销系统，再进入，开MySQL，使用用户名root和刚才设置的新密码123456登陆。
+据说可以用直接修改user表文件的方法：
+关闭MySQL，Windows下打开Mysql\data\mysql，有三个文件user.frm,user.MYD,user.MYI找个知道密码的MySQL，替换相应的这三个文件，如果user表结构没改过，一般也没人去改，替换user.MYD就可以了。
+也可以直接编辑user.MYD，找个十六进制编辑器，UltraEdit就有这个功能。关闭MySQL，打开user.MYD。将用户名root后面的八个字符改为565491d704013245，新密码就是123456。或者将它们对应的十六进制数字，（左边那里，一个字符对应两个数字），改为 00 02 02 02 02 02 02 02,这就是空密码，在编辑器右边看到的都是星号*，看起来很象小数点。重开MySQL，输入root和你的新密码。</p> <p>MY-SQL常用命令
+一、连接MYSQL。</p> <p>格式：   mysql   -h主机地址   -u用户名   －p用户密码</p> <p>1、例1：连接到本机上的MYSQL。</p> <p>首先在打开DOS窗口，然后进入目录   mysqlbin，再键入命令mysql   -uroot   -p，回车后提示你输密码，如果刚安装好MYSQL，超级用户root是没有密码的，故直接回车即可进入到MYSQL中了，MYSQL的提示符是：mysql&gt;</p> <p>2、例2：连接到远程主机上的MYSQL。假设远程主机的IP为：110.110.110.110，用户名为root,密码为abcd123。则键入以下命令：</p> <div class="language- extra-class"><pre class="language-text"><code>  mysql   -h110.110.110.110   -uroot   -pabcd123
+</code></pre></div><p>（注:u与root可以不用加空格，其它也一样）</p> <p>3、退出MYSQL命令：   exit   （回车）</p> <p>二、修改密码。</p> <p>格式：mysqladmin   -u用户名   -p旧密码   password   新密码</p> <p>1、例1：给root加个密码ab12。首先在DOS下进入目录mysqlbin，然后键入以下命令</p> <div class="language- extra-class"><pre class="language-text"><code>  mysqladmin   -uroot   -password   ab12
+</code></pre></div><p>注：因为开始时root没有密码，所以-p旧密码一项就可以省略了。</p> <p>2、例2：再将root的密码改不能动了），转到mysql\bin目录。
+5.输入mysql回车，如果成功，将出现MySQL提示符 &gt;
+6. 连接权限数据库</p> <div class="language- extra-class"><pre class="language-text"><code>&gt;use mysql;
+</code></pre></div><p>(&gt;是本来就有的提示符,别忘了最后的分号)</p> <p>6.改密码：</p> <div class="language- extra-class"><pre class="language-text"><code>&gt; update user set password=password(9F符）
+</code></pre></div><p>格式：grant   select   on   数据库.*   to   用户名@登录主机   identified   by   &quot;密码&quot;
+例1、增加一个用户test1密码为abc，让他可以在任何主机上登录，并对所有数据库有查询、插入、修改、删除的权限。首先用以root用户连入MYSQL，然后键入以下命令：</p> <div class="language- extra-class"><pre class="language-text"><code>  grant   select,insert,update,delete   on   *.*   to   test1@\&quot;%\&quot;   Identified   by   \&quot;abc\&quot;;
+</code></pre></div><p>但例1增加的用户是十分危险的，你想如某个人知道test1的密码，那么他就可以在internet上的任何一台电脑上登录你的mysql数据库并对你的数据可以为所欲为了，解决办法见例2。</p> <p>例2、增加一个用户test2密码为abc,让他只可以在localhost上登录，并可以对数据库mydb进行查询、插入、修改、删除的操作（localhost指本地主机，即MYSQL数据库所在的那台主机），这样用户即使用知道test2的密码，他也无法从internet上直接访问数据库，只能通过MYSQL主机上的web页来访问了。</p> <div class="language- extra-class"><pre class="language-text"><code>  grant   select,insert,update,delete   on   mydb.*   to   test2@localhost   identified   by   \&quot;abc\&quot;;
+</code></pre></div><p>如果你不想test2有密码，可以再打一个命令将密码消掉。</p> <div class="language- extra-class"><pre class="language-text"><code>  grant   select,insert,update,delete   on   mydb.*   to   test2@localhost   identified   by   \&quot;\&quot;;
+</code></pre></div><p>在上篇我们讲了登录、增加用户、密码更改等问题。下篇我们来看看MYSQL中有关数据库方面的操作。注意：你必须首先登录到MYSQL中，以下操作都是在MYSQL的提示符下进行的，而且每个命令以分号结束。</p> <p>一、操作技巧</p> <p>1、如果你打命令时，回车后发现忘记加分号，你无须重打一遍命令，只要打个分号回车就可以了。也就是说你可以把一个完整的命令分成几行来打，完后用分号作结束标志就OK。</p> <p>2、你可以使用光标上下键调出以前的命令。但以前我用过的一个MYSQL旧版本不支持。我现在用的是mysql-3.23.27-beta-win。
+二、显示命令</p> <p>1、显示数据库列表。</p> <div class="language- extra-class"><pre class="language-text"><code>  show   databases;
+</code></pre></div><p>刚开始时才两个数据库：mysql和test。mysql库很重要它里面有MYSQL的系统信息，我们改密码和新增用户，实际上就是用这个库进行操作。</p> <p>2、显示库中的数据表：</p> <div class="language- extra-class"><pre class="language-text"><code>  use   mysql；   ／／打开库，学过FOXBASE的一定不会陌生吧
+
+  show   tables;
+</code></pre></div><p>3、显示数据表的结构：</p> <p>describe   表名;</p> <p>4、建库：</p> <p>create   database   库名;</p> <p>5、建表：</p> <p>use   库名；</p> <p>create   table   表名   (字段设定列表)；</p> <p>6、删库和删表:</p> <p>drop   database   库名;</p> <p>drop   table   表名；</p> <p>7、将表中记录清空：</p> <p>delete   from   表名;</p> <p>8、显示表中的记录：</p> <p>select   *   from   表名;</p> <p>三、一个建库和建表以及插入数据的实例</p> <div class="language- extra-class"><pre class="language-text"><code>  drop   database   if   exists   school;   //如果存在SCHOOL则删除
+
+  create   database   school;   //建立库SCHOOL
+
+  use   school;   //打开库SCHOOL
+create   table   teacher   //建立表TEACHER
+
+  (
+
+  id   int(3)   auto_increment   not   null   primary   key,
+
+  name   char(10)   not   null,
+
+  address   varchar(50)   default   ’深圳’,
+
+  year   date
+
+  );   //建表结束
+
+  //以下为插入字段
+
+  insert   into   teacher   values(’’,’glchengang’,’深圳一中’,’1976-10-10’);
+
+  insert   into   teacher   values(’’,’jack’,’深圳一中’,’1975-12-23’);
+</code></pre></div><p>注：在建表中（1）将ID设为长度为3的数字字段:int(3)并让它每个记录自动加一:auto_increment并不能为空:not   null而且让他成为主字段primary   key（2）将NAME设为长度为10的字符字段（3）将ADDRESS设为长度50的字符字段，而且缺省值为深圳。varchar和char有什么区别呢，只有等以后的文章再说了。（4）将YEAR设为日期字段。</p> <p>如果你在mysql提示符键入上面的命令也可以，但不方便调试。你可以将以上命令原样写入一个文本文件中假设为school.sql，然后复制到c:\下，并在DOS状态进入目录\mysql\bin，然后键入以下命令：</p> <p>mysql   -uroot   -p密码   &lt;   c:\school.sql</p> <p>如果成功，空出一行无任何显示；如有错误，会有提示。（以上命令已经调试，你只要将//的注释去掉即可使用）。</p> <p>四、将文本数据转到数据库中</p> <p>1、文本数据应符合的格式：字段数据之间用tab键隔开，null值用\n来代替.
+例：</p> <p>3   rose   深圳二中   1976-10-10</p> <p>4   mike   深圳一中   1975-12-23</p> <p>2、数据传入命令   load   data   local   infile   &quot;文件名&quot;   into   table   表名;</p> <p>注意：你最好将文件复制到\mysql\bin目录下，并且要先用use命令打表所在的库。</p> <p>五、备份数据库：（命令在DOS的\mysql\bin目录下执行）</p> <div class="language- extra-class"><pre class="language-text"><code>  mysqldump   --opt   school&gt;school.bbb
+</code></pre></div><p>注释:将数据库school备份到school.bbb文件，school.bbb是一个文本文件，文件名任取，打开看看你会有新发现。</p></div> <div class="page-edit"><!----> <!----></div> <!----> </div> <!----></div></div>
+    <script src="/assets/js/10.368d8957.js" defer></script><script src="/assets/js/app.5770203f.js" defer></script>
+  </body>
+</html>

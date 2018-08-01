@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CSS盒子模型（一） | lovelope博客</title>
+    <meta name="description" content="种下一棵树的最佳时间不是十年前，而是现在。">
+    
+    
+    <link rel="preload" href="/assets/css/0.styles.83d3ab16.css" as="style"><link rel="preload" href="/assets/js/app.5770203f.js" as="script"><link rel="preload" href="/assets/js/5.26cd1ccd.js" as="script"><link rel="prefetch" href="/assets/js/3.aff9079f.js"><link rel="prefetch" href="/assets/js/2.673272d7.js"><link rel="prefetch" href="/assets/js/4.a1bc754e.js"><link rel="prefetch" href="/assets/js/6.0af27563.js"><link rel="prefetch" href="/assets/js/7.a5fea5a1.js"><link rel="prefetch" href="/assets/js/8.cd6f4ee1.js"><link rel="prefetch" href="/assets/js/9.0bd568a0.js"><link rel="prefetch" href="/assets/js/10.368d8957.js"><link rel="prefetch" href="/assets/js/11.9f1e6fae.js"><link rel="prefetch" href="/assets/js/12.b8efd0be.js"><link rel="prefetch" href="/assets/js/13.624745ce.js"><link rel="prefetch" href="/assets/js/14.e1387c03.js"><link rel="prefetch" href="/assets/js/15.76fa5cc0.js"><link rel="prefetch" href="/assets/js/16.bcf7569f.js"><link rel="prefetch" href="/assets/js/17.51e61b79.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.83d3ab16.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">lovelope博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><!---->  <!----> </div> <div class="page"> <div class="content"><h1 id="css盒子模型"><a href="#css盒子模型" aria-hidden="true" class="header-anchor">#</a> CSS盒子模型</h1> <p>盒子模型（Box Model）是CSS控制页面时一个很重要的概念。只有很好地掌握了盒子模型以及其中每个元素的用法，才能真正地控制好页面中的各个元素。
+所有页面中的元素都可以看成是一个盒子，占据着一定的页面空间。 一般来说这些被占据的空间往往都要比单纯的内容大。 可以通过调整盒子的边框和边距等参数，来调节盒子的位置和大小。一个页面由很多这样的盒子组成，这些盒子之间会互相影响。
+掌握盒子模型需要从两方面来理解：一是理解单个的盒子的内部结构；二是理解多个盒子之间的相互关系。
+本文首先讲解独立的盒子相关的性质，然后介绍在普通情况下盒子的排列关系。下一次将更深入地讲解浮动和定位的相关内容。</p> <h2 id="一．-盒子模型概念"><a href="#一．-盒子模型概念" aria-hidden="true" class="header-anchor">#</a> 一． 盒子模型概念</h2> <ol><li><p>现实生活中的盒子：
+<img src="/assets/img/realbox.58a97d20.png" alt="real box">
+图1  现实生活中的盒子</p></li> <li><p>盒子模型（Box Model）
+在网页布局中，为了能够使纷繁复杂的各个部分合理地进行组织，通过研究，总结出了一套完整的、行之有效的原则和规范，这就是“盒子模型”的由来。
+在CSS中，一个独立的盒子模型由内容(content)、边框(border)、填充(padding)和边界(margin)4个部分组成：</p></li></ol> <ul><li>内容(content)：对应盒内物品</li> <li>边框(border)：对应包装盒的纸壳，具有厚度</li> <li>填充(padding)：位于边框内部，是内容与边框的距离，对应包装盒的填充部分</li> <li>边界(margin)：位于边框外部，是边框外面周围的间隙，对应纸壳外围间隙  -
+<img src="/assets/img/boxmodel.d017f1e2.png" alt="box model">
+图2  标准盒子模型</li></ul> <ol start="3"><li>盒子模型的三维立体结构图
+<img src="/assets/img/3dboxmodel.5206df7b.png" alt="3d box model">
+图3  CSS2.0盒子模型的三维立体结构图</li></ol> <ul><li>边框（border），位于盒子的第一层。</li> <li>元素内容（content）、内边距（padding），两者同位于第二层。</li> <li>背景图（background-image），位于第三层。</li> <li>背景色（background-color），位于第四层。</li> <li>整个盒子的外边距（margin），位于第五层。</li></ul></div> <div class="page-edit"><!----> <!----></div> <!----> </div> <!----></div></div>
+    <script src="/assets/js/5.26cd1ccd.js" defer></script><script src="/assets/js/app.5770203f.js" defer></script>
+  </body>
+</html>

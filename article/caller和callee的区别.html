@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>caller和callee的区别 | lovelope博客</title>
+    <meta name="description" content="种下一棵树的最佳时间不是十年前，而是现在。">
+    
+    
+    <link rel="preload" href="/assets/css/0.styles.83d3ab16.css" as="style"><link rel="preload" href="/assets/js/app.5770203f.js" as="script"><link rel="preload" href="/assets/js/11.9f1e6fae.js" as="script"><link rel="prefetch" href="/assets/js/3.aff9079f.js"><link rel="prefetch" href="/assets/js/2.673272d7.js"><link rel="prefetch" href="/assets/js/4.a1bc754e.js"><link rel="prefetch" href="/assets/js/5.26cd1ccd.js"><link rel="prefetch" href="/assets/js/6.0af27563.js"><link rel="prefetch" href="/assets/js/7.a5fea5a1.js"><link rel="prefetch" href="/assets/js/8.cd6f4ee1.js"><link rel="prefetch" href="/assets/js/9.0bd568a0.js"><link rel="prefetch" href="/assets/js/10.368d8957.js"><link rel="prefetch" href="/assets/js/12.b8efd0be.js"><link rel="prefetch" href="/assets/js/13.624745ce.js"><link rel="prefetch" href="/assets/js/14.e1387c03.js"><link rel="prefetch" href="/assets/js/15.76fa5cc0.js"><link rel="prefetch" href="/assets/js/16.bcf7569f.js"><link rel="prefetch" href="/assets/js/17.51e61b79.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.83d3ab16.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">lovelope博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><!---->  <!----> </div> <div class="page"> <div class="content"><h1 id="caller和callee的区别"><a href="#caller和callee的区别" aria-hidden="true" class="header-anchor">#</a> <code>caller</code>和<code>callee</code>的区别</h1> <p></p><div class="table-of-contents"><ul><li><a href="#caller">caller</a></li><li><a href="#callee">callee</a></li></ul></div> <code>caller</code>返回一个函数的引用，这个函数调用了当前的函数;<br> <code>callee</code>放回正在执行的函数本身的引用，它是arguments的一个属性<p></p> <h2 id="caller"><a href="#caller" aria-hidden="true" class="header-anchor">#</a> caller</h2> <p>caller返回一个函数的引用，这个函数调用了当前的函数。<br>
+使用这个属性要注意:</p> <ol><li>这个属性只有当函数在执行时才有用</li> <li>如果在javascript程序中，函数是由顶层调用的，则返回<code>null</code></li></ol> <p><code>functionName.caller</code>: functionName是当前正在执行的函数。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> <span class="token function-variable function">a</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>caller<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> <span class="token function-variable function">b</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+</code></pre></div><p>上面的代码中，b调用了a，那么<code>a.caller</code>返回的是b的引用，结果如下:</p> <div class="language- extra-class"><pre class="language-text"><code>var b = function() {
+    a();
+}
+</code></pre></div><p>如果直接调用a(即a在任何函数中被调用，也就是顶层调用),返回<code>null</code>:</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> <span class="token function-variable function">a</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>caller<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> <span class="token function-variable function">b</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">//b();</span>
+<span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>输出结果:</p> <div class="language- extra-class"><pre class="language-text"><code>null
+</code></pre></div><h2 id="callee"><a href="#callee" aria-hidden="true" class="header-anchor">#</a> callee</h2> <p><code>callee</code>放回正在执行的函数本身的引用，它是<code>arguments</code>的一个属性<br>
+使用callee时要注意:</p> <ol><li>这个属性只有在函数执行时才有效</li> <li>它有一个length属性，可以用来获得形参的个数，因此可以用来比较形参和实参个数是否一致，即比较<code>arguments.length</code>是否等于<code>arguments.callee.length</code></li> <li>它可以用来递归匿名函数。</li></ol> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> <span class="token function-variable function">a</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arguments<span class="token punctuation">.</span>callee<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> <span class="token function-variable function">b</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>a在b中被调用，但是它返回了a本身的引用，结果如下:</p> <div class="language- extra-class"><pre class="language-text"><code>var a = function() {
+    console.log(arguments.callee);
+}
+</code></pre></div></div> <div class="page-edit"><!----> <!----></div> <!----> </div> <!----></div></div>
+    <script src="/assets/js/11.9f1e6fae.js" defer></script><script src="/assets/js/app.5770203f.js" defer></script>
+  </body>
+</html>

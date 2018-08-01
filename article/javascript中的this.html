@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>javascript中的this | lovelope博客</title>
+    <meta name="description" content="种下一棵树的最佳时间不是十年前，而是现在。">
+    
+    
+    <link rel="preload" href="/assets/css/0.styles.83d3ab16.css" as="style"><link rel="preload" href="/assets/js/app.5770203f.js" as="script"><link rel="preload" href="/assets/js/13.624745ce.js" as="script"><link rel="prefetch" href="/assets/js/3.aff9079f.js"><link rel="prefetch" href="/assets/js/2.673272d7.js"><link rel="prefetch" href="/assets/js/4.a1bc754e.js"><link rel="prefetch" href="/assets/js/5.26cd1ccd.js"><link rel="prefetch" href="/assets/js/6.0af27563.js"><link rel="prefetch" href="/assets/js/7.a5fea5a1.js"><link rel="prefetch" href="/assets/js/8.cd6f4ee1.js"><link rel="prefetch" href="/assets/js/9.0bd568a0.js"><link rel="prefetch" href="/assets/js/10.368d8957.js"><link rel="prefetch" href="/assets/js/11.9f1e6fae.js"><link rel="prefetch" href="/assets/js/12.b8efd0be.js"><link rel="prefetch" href="/assets/js/14.e1387c03.js"><link rel="prefetch" href="/assets/js/15.76fa5cc0.js"><link rel="prefetch" href="/assets/js/16.bcf7569f.js"><link rel="prefetch" href="/assets/js/17.51e61b79.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.83d3ab16.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">lovelope博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <div class="sidebar"><!---->  <!----> </div> <div class="page"> <div class="content"><h1 id="javascript的this用法"><a href="#javascript的this用法" aria-hidden="true" class="header-anchor">#</a> Javascript的this用法</h1> <p>this是Javascript语言的一个<strong>关键字</strong>。<br>
+它代表函数运行时，自动生成的一个内部对象，<strong>只能在函数内部使用</strong>。比如，</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+　　<span class="token keyword">this</span><span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>随着函数使用场合的不同，this的值会发生变化。<strong>但是有一个总的原则，那就是this指的是，调用函数的那个对象。</strong>
+下面分四种情况，详细讨论this的用法。</p> <h2 id="情况一：纯粹的函数调用"><a href="#情况一：纯粹的函数调用" aria-hidden="true" class="header-anchor">#</a> 情况一：纯粹的函数调用</h2> <p>这是函数的最通常用法，属于全局性调用，因此this就代表全局对象Global。
+请看下面这段代码，它的运行结果是1。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+　　<span class="token keyword">this</span><span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token function">　　alert</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1</span>
+</code></pre></div><p>为了证明this就是全局对象，我对代码做一些改变：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token function">　　alert</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1</span>
+</code></pre></div><p>运行结果还是1。再变一下：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+　　<span class="token keyword">this</span><span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//0</span>
+</code></pre></div><h2 id="情况二：作为对象方法的调用"><a href="#情况二：作为对象方法的调用" aria-hidden="true" class="header-anchor">#</a> 情况二：作为对象方法的调用</h2> <p>函数还可以作为某个对象的方法调用，这时this就指这个上级对象。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token function">　　alert</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>m <span class="token operator">=</span> test<span class="token punctuation">;</span>
+o<span class="token punctuation">.</span><span class="token function">m</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1</span>
+</code></pre></div><h2 id="情况三-作为构造函数调用"><a href="#情况三-作为构造函数调用" aria-hidden="true" class="header-anchor">#</a> 情况三 作为构造函数调用</h2> <p>所谓构造函数，就是通过这个函数生成一个新对象（object）。这时，this就指这个新对象。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+　　<span class="token keyword">this</span><span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>o<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1</span>
+</code></pre></div><p>运行结果为1。为了表明这时this不是全局对象，我对代码做一些改变：</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+　　<span class="token keyword">this</span><span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//2</span>
+</code></pre></div><p>运行结果为2，表明全局变量x的值根本没变。</p> <h2 id="情况四-apply调用"><a href="#情况四-apply调用" aria-hidden="true" class="header-anchor">#</a> 情况四 apply调用</h2> <p>apply()是函数对象的一个方法，它的作用是改变函数的调用对象，它的第一个参数就表示改变后的调用这个函数的对象。因此，this指的就是这第一个参数。</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+<span class="token function">　　alert</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> o<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>m <span class="token operator">=</span> test<span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>m<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//0</span>
+</code></pre></div><p>apply()的参数为空时，默认调用全局对象。因此，这时的运行结果为0，证明this指的是全局对象。
+如果把最后一行代码修改为</p> <div class="language-javascript extra-class"><pre class="language-javascript"><code>　　o<span class="token punctuation">.</span>m<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>o<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//1</span>
+</code></pre></div><p>运行结果就变成了1，证明了这时this代表的是对象o。<br>
+总结一下，javascript中this总是指向调用函数的那个对象。<br>
+（完）<br>
+注：原文属于<a href="http://www.ruanyifeng.com/blog/2010/04/using_this_keyword_in_javascript.html" target="_blank" rel="noopener noreferrer">阮一峰<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>，我使用<code>markdown</code>语法重写。</p></div> <div class="page-edit"><!----> <!----></div> <!----> </div> <!----></div></div>
+    <script src="/assets/js/13.624745ce.js" defer></script><script src="/assets/js/app.5770203f.js" defer></script>
+  </body>
+</html>
